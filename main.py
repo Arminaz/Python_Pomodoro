@@ -13,17 +13,17 @@ SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 
 # ---------------------------- GLOBAL VARS ------------------------------- #
-REP = 0
-TIMER_LOOP=None
+rep = 0
+timer_loop=None
 
 # ---------------------------- TIMER RESET ------------------------------- # 
 
 def reset_timer():
-    global REP
-    global TIMER_LOOP
+    global rep
+    global timer_loop
 
-    REP = 0
-    window.after_cancel(TIMER_LOOP)
+    rep = 0
+    window.after_cancel(timer_loop)
     canvas.itemconfig(timer_text, text="00:00")
     timer_label.config(text="Timer", fg=GREEN)
     checkmark.config(text="")
@@ -31,8 +31,8 @@ def reset_timer():
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
 def start_timer():
-    global REP
-    REP += 1
+    global rep
+    rep += 1
     
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
@@ -40,10 +40,10 @@ def start_timer():
     current_sec = 0
 
 
-    if REP % 2 == 0 and REP != 8: # If its short break time
+    if rep % 2 == 0 and rep != 8: # If its short break time
         timer_label.config(text="Break", fg=PINK)
         current_sec = short_break_sec
-    elif REP % 8 == 0: # if its long break time
+    elif rep % 8 == 0: # if its long break time
         timer_label.config(text="Break", fg=RED)
         current_sec = long_break_sec
     else:
@@ -54,7 +54,7 @@ def start_timer():
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 def count_down(count):
-    global TIMER_LOOP
+    global timer_loop
 
     count_min = math.floor(count/60)
     count_sec = count % 60
@@ -69,11 +69,11 @@ def count_down(count):
 
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
-        TIMER_LOOP=window.after(1000, count_down, count - 1)
+        timer_loop=window.after(1000, count_down, count - 1)
     else:
         start_timer()
         # Add a checkmark for each work done
-        if REP % 2 == 0:
+        if rep % 2 == 0:
             current_text = checkmark.cget("text")
             checkmark.config(text=f"{current_text}✔")
 
